@@ -23,11 +23,11 @@ function App() {
   function handleClick() {
     setFormVisible((prev) => !prev);
   }
-  function handleSubmit(event: React.MouseEvent<HTMLButtonElement>) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
   }
   function handleFormChange(event) {
-    const { name, value } = event.content;
+    const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -51,7 +51,7 @@ function App() {
           />
           <label htmlFor="url">Clip Content</label>
           <input
-            type="text"h
+            type="text"
             id="url"
             name="url"
             value={formData.url}
