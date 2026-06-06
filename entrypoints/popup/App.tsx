@@ -3,6 +3,7 @@ import type { Link } from "./types";
 import "./App.css";
 
 function App() {
+  const [isFormVisible, setFormVisible] = useState(false)
   const [links, setLinks] = useState<Link[]>([
     {
       id: crypto.randomUUID(),
@@ -15,12 +16,15 @@ function App() {
       url: "https://github.com/bokharii",
     },
   ]);
-  function handleClick() {}
+  function handleClick() {
+    setFormVisible(prev => !prev)
+  }
 
   return (
     <>
       <h1>Clippy</h1>
       <button onClick={handleClick}>Add Link</button>
+      {isFormVisible && <p>Hi</p>}
       {links.map((link) => (
         <div key={link.id} className="link-row">
           {link.name}: {link.url}
