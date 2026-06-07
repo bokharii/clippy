@@ -3,6 +3,7 @@ import type { Link } from "./types";
 import "./App.css";
 
 function App() {
+  const [isCopied, setIsCopied] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -50,9 +51,22 @@ function App() {
     setLinks(updatedLinks);
   }
 
+  async function handleCopy(linkUrl: string) {
+    try {
+      await navigator.clipboard.writeText(linkUrl);
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1500);
+    } catch (error) {
+      console.log("Error copying link", error);
+    }
+  }
+
   return (
     <>
       <h1>Clippy</h1>
+      {isCopied && <h3>Copied!</h3>}
       <button onClick={handleClick}>Add New Clip</button>
       {isFormVisible && (
         <form onSubmit={handleSubmit}>
@@ -80,7 +94,7 @@ function App() {
       {links.map((link) => (
         <div key={link.id} className="link-row">
           {link.name}: {link.url}
-          <button>Copy</button>
+          <button onClick={() => handleCopy(link.url)}>Copy</button>
           <button onClick={() => handleDelete(link.id)}>Delete</button>
         </div>
       ))}
