@@ -35,7 +35,7 @@ function App() {
       name: "",
       url: "",
     });
-    setFormVisible(false)
+    setFormVisible(false);
   }
   function handleFormChange(event) {
     const { name, value } = event.target;
@@ -43,6 +43,11 @@ function App() {
       ...prevData,
       [name]: value,
     }));
+  }
+
+  function handleDelete(linkId: string) {
+    const updatedLinks = links.filter((link) => link.id !== linkId);
+    setLinks(updatedLinks);
   }
 
   return (
@@ -76,7 +81,7 @@ function App() {
         <div key={link.id} className="link-row">
           {link.name}: {link.url}
           <button>Copy</button>
-          <button>Delete</button>
+          <button onClick={() => handleDelete(link.id)}>Delete</button>
         </div>
       ))}
     </>
