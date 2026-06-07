@@ -25,6 +25,17 @@ function App() {
   }
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const newLink = {
+      id: crypto.randomUUID(),
+      name: formData.name,
+      url: formData.url,
+    };
+    setLinks([...links, newLink]);
+    setFormData({
+      name: "",
+      url: "",
+    });
+    setFormVisible(false)
   }
   function handleFormChange(event) {
     const { name, value } = event.target;
