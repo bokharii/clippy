@@ -3,7 +3,7 @@ import type { Link } from "./types";
 import "./App.css";
 
 function App() {
-  const MAX_LINKS = 5
+  const MAX_LINKS = 5;
   const [isCopied, setIsCopied] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [formData, setFormData] = useState({
@@ -81,11 +81,13 @@ function App() {
   }
 
   return (
-    <>
+    <div className="clipboard">
       <h1>Clippy</h1>
       {isCopied && <h3>Copied!</h3>}
       {isLimitReached && <h3>You can only have 5 active Clips at a time!</h3>}
-      <button onClick={handleClick} disabled={links.length >= MAX_LINKS}>Add New Clip</button>
+      <button onClick={handleClick} disabled={links.length >= MAX_LINKS}>
+        Add New Clip
+      </button>
       {isFormVisible && (
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Clip Name</label>
@@ -111,12 +113,17 @@ function App() {
       )}
       {links.map((link) => (
         <div key={link.id} className="link-row">
-          {link.name}: {link.url}
-          <button onClick={() => handleCopy(link.url)}>Copy</button>
-          <button onClick={() => handleDelete(link.id)}>Delete</button>
+          <div className="link-info">
+            <span className="link-name">{link.name}</span>
+            <span className="link-url">{link.url}</span>
+          </div>
+          <div className="link-actions">
+            <button onClick={() => handleCopy(link.url)}>Copy</button>
+            <button onClick={() => handleDelete(link.id)}>Delete</button>
+          </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
