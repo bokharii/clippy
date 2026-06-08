@@ -1,31 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Link } from "./types";
 import "./App.css";
 
 function App() {
+  const MAX_LINKS = 5
   const [isCopied, setIsCopied] = useState(false);
   const [isFormVisible, setFormVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     url: "",
   });
-  const [links, setLinks] = useState<Link[]>([
-    {
-      id: crypto.randomUUID(),
-      name: "GitHub",
-      url: "https://github.com/bokharii",
-    },
-    {
-      id: crypto.randomUUID(),
-      name: "LinkedIn",
-      url: "https://github.com/bokharii",
-    },
-  ]);
+  const [links, setLinks] = useState<Link[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+
+  useEffect(() => {
+    async function getLinksFromLocalStorage() {
+      const result = await browser.storage.local.get("links");
+      setLinks((result.links as Link[] | undefined) ?? []);
+      setLoaded(true);
+    }
+    getLinksFromLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    browser.storage.local.set({ links });
+  }, [links, loaded]);
+
   function handleClick() {
     setFormVisible((prev) => !prev);
   }
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // check if the user has more than 5 links - if they do, then we want to tell them that they are at capacity
+    if (links.length >= MAX_LINKS) {
+      setIsLimitReached(true);
+      setTimeout(() => {
+        setIsLimitReached(false);
+      }, 1500);
+      return;
+    }
     const newLink = {
       id: crypto.randomUUID(),
       name: formData.name,
@@ -38,7 +54,8 @@ function App() {
     });
     setFormVisible(false);
   }
-  function handleFormChange(event) {
+
+  function handleFormChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -67,7 +84,8 @@ function App() {
     <>
       <h1>Clippy</h1>
       {isCopied && <h3>Copied!</h3>}
-      <button onClick={handleClick}>Add New Clip</button>
+      {isLimitReached && <h3>You can only have 5 active Clips at a time!</h3>}
+      <button onClick={handleClick} disabled={links.length >= MAX_LINKS}>Add New Clip</button>
       {isFormVisible && (
         <form onSubmit={handleSubmit}>
           <label htmlFor="name">Clip Name</label>
