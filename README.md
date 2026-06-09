@@ -4,6 +4,8 @@ A Chrome extension for saving and copying links you use all the time.
 
 I've been applying to a lot of roles recently, and many applications ask for the same links — LinkedIn, GitHub, portfolio, and so on. Clippy keeps those clips in one place so you can copy any of them in a click, without digging through bookmarks or old messages.
 
+<img width="379" height="491" alt="Screenshot 2026-06-09 at 3 57 55 PM" src="https://github.com/user-attachments/assets/51cd84a2-704c-40dc-94fa-26ec965b41e5" />
+
 ## Features
 
 - **Save up to 5 clips** — each with a name and URL
