@@ -82,14 +82,30 @@ function App() {
 
   return (
     <div className="clipboard">
-      <h1>Clippy</h1>
-      {isCopied && <h3>Copied!</h3>}
-      {isLimitReached && <h3>You can only have 5 active Clips at a time!</h3>}
-      <button onClick={handleClick} disabled={links.length >= MAX_LINKS}>
+      <header className="clipboard-header">
+        <h1>Clippy</h1>
+        <p className="clip-count">
+          {links.length}/{MAX_LINKS} clips
+        </p>
+      </header>
+
+      {isCopied && <p className="toast toast-success">Copied!</p>}
+      {isLimitReached && (
+        <p className="toast toast-error">
+          You can only have 5 active clips at a time.
+        </p>
+      )}
+
+      <button
+        className="btn btn-primary"
+        onClick={handleClick}
+        disabled={links.length >= MAX_LINKS}
+      >
         Add New Clip
       </button>
+
       {isFormVisible && (
-        <form onSubmit={handleSubmit}>
+        <form className="clip-form" onSubmit={handleSubmit}>
           <label htmlFor="name">Clip Name</label>
           <input
             type="text"
@@ -99,30 +115,50 @@ function App() {
             required
             onChange={handleFormChange}
           />
-          <label htmlFor="url">Clip Content</label>
+          <label htmlFor="url">Clip URL</label>
           <input
-            type="text"
+            type="url"
             id="url"
             name="url"
             value={formData.url}
             required
             onChange={handleFormChange}
+            placeholder="https://"
           />
-          <button>Create</button>
+          <button type="submit" className="btn btn-primary">
+            Create
+          </button>
         </form>
       )}
-      {links.map((link) => (
-        <div key={link.id} className="link-row">
-          <div className="link-info">
-            <span className="link-name">{link.name}</span>
-            <span className="link-url">{link.url}</span>
-          </div>
-          <div className="link-actions">
-            <button onClick={() => handleCopy(link.url)}>Copy</button>
-            <button onClick={() => handleDelete(link.id)}>Delete</button>
-          </div>
-        </div>
-      ))}
+
+      {links.length === 0 ? (
+        <p className="empty-state">No clips yet. Add your first link above.</p>
+      ) : (
+        <ul className="link-list">
+          {links.map((link) => (
+            <li key={link.id} className="link-row">
+              <div className="link-info">
+                <span className="link-name">{link.name}</span>
+                <span className="link-url">{link.url}</span>
+              </div>
+              <div className="link-actions">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleCopy(link.url)}
+                >
+                  Copy
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDelete(link.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
